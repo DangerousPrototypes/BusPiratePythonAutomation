@@ -8,7 +8,7 @@ This is a fork of [clvLabs Bus Pirate automation tool](https://github.com/clvLab
 - **Avoid VT100/ANSI color mode**. The script does not handle VT100/ANSI color codes. Color will likely be shown in the terminal, but it will appear as garbage in the log. If the status toolbar is enabled it will inject additional voltage status updates in the terminal. Use the ```c``` command to show the configuration menu, then disable the VT100/ANSI color mode and the status toolbar. **This can be done as part of your script**.
 - **Use the latest Bus Pirate firmware**. The script requires a recent firmware that emits unprintable ASCII character 0x03 following each prompt.
 - **Handle saved settings**. Bus Pirate 5+ saves the settings for each mode, and prompts to use previous settings when entering a mode. For consistent scripting, have your script delete the mode configuration file before entering a mode. This can be done with ```rm bp<mode>.bp```. For example ```rm bpi2c.bp``` to delete the I2C mode configuration file. 
-- **Consider using the autosnip.py tool**. We use an [autosnip tool](https://docs.buspirate.com/docs/development/documentation/#static-terminal-output) for documentation generation. It can save convert VT100 to HTML and save to one or more files.
+- **Consider using the autosnip.py tool**. We use an [autosnip tool](https://docs.buspirate.com/docs/development/documentation/#static-terminal-output) for documentation generation. It can convert VT100 to HTML and save to one or more files. There is also an [autocast tool](https://docs.buspirate.com/docs/development/documentation/#asciinema-screencasts) for creating asciinema screen casts.
 
 ## Updated sample.txt script
 ```
