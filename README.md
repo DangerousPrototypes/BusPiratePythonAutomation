@@ -5,26 +5,30 @@ This is a fork of [clvLabs Bus Pirate automation tool](https://github.com/clvLab
 ## **IMPORTANT NOTES**
 
 - **Reset feature has been removed**. Bus Pirate v3.x had a USB to serial converter chip that remained connected while the Bus Pirate did a hardware reset. Bus Pirate 5+ uses a chip with built in USB, during reset the serial port disconnects/reconnects which this script has not been updated to handle. 
-- **Avoid VT100/ANSI color mode**. The script does not handle VT100/ANSI color codes. Color will likely be shown in the terminal, but it will appear as garbage in the log. If the status toolbar is enabled it will inject additional voltage status updates in the terminal. Use the ```c``` command to show the configuration menu, then disable the VT100/ANSI color mode and the status toolbar.
+- **Avoid VT100/ANSI color mode**. The script does not handle VT100/ANSI color codes. Color will likely be shown in the terminal, but it will appear as garbage in the log. If the status toolbar is enabled it will inject additional voltage status updates in the terminal. Use the ```c``` command to show the configuration menu, then disable the VT100/ANSI color mode and the status toolbar. **This can be done as part of your script**.
 - **Use the latest Bus Pirate firmware**. The script requires a recent firmware that emits unprintable ASCII character 0x03 following each prompt.
 - **Handle saved settings**. Bus Pirate 5+ saves the settings for each mode, and prompts to use previous settings when entering a mode. For consistent scripting, have your script delete the mode configuration file before entering a mode. This can be done with ```rm bp<mode>.bp```. For example ```rm bpi2c.bp``` to delete the I2C mode configuration file. 
 - **Consider using the autosnip.py tool**. We use an [autosnip tool](https://docs.buspirate.com/docs/development/documentation/#static-terminal-output) for documentation generation. It can save convert VT100 to HTML and save to one or more files.
 
 ## Updated sample.txt script
 ```
-rm bpi2c.bp //remove configuration file 
-m i2c      // set I2C mode
-400       // set I2C speed (400KHz)
-1      //disable clock stretching
-W 3.3      // start power supply
-P      //enable pull-ups
-v       // read pin states
-> D:10        // delay
-w       // stop power supply
-v       // read pin states
-m hiz      // set HiZ mode
+c           // show configuration menu
+2           // ANSI color mode setting
+1           // disable ANSI color mode
+rm bpi2c.bp // remove configuration file 
+m i2c       // set I2C mode
+400         // set I2C speed (400KHz)
+1           // disable clock stretching
+W 3.3       // start power supplies
+P           // enable pull-ups
+v           // read pin states
+> D:10      // delay
+w           // stop power supplies
+v           // read pin states
+m hiz       // set HiZ mode
 ```
-
+- Disables ANSI color mode
+- Removes the I2C mode configuration file
 ## Original BusPirate.py documentation
 
 A simple scripting tool for Bus Pirate written in Python.
