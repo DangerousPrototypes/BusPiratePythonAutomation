@@ -1,4 +1,4 @@
-SERIAL_PORT = '/dev/ttyUSB0'
-RESET_AT_STARTUP = True
-RESET_AT_END = False
+SERIAL_PORT = 'COM34'
+RESET_AT_STARTUP = False # removed
+RESET_AT_END = False    # removed
 SCRIPT_BLANK_LINE_DELAY = 250

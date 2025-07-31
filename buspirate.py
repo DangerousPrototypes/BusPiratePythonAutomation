@@ -4,6 +4,8 @@
 """
 Bus Pirate scripting tool
 """
+# Originally written by: clvLabs https://github.com/clvLabs/BusPirate
+# Updated for Bus Pirate 5 by: Ian Lesnet https://github.com/DangerousPrototypes/BusPiratePythonAutomation
 
 import sys
 import os
@@ -19,7 +21,7 @@ from config import *
 BP_SERIAL_SPEED = 115200
 BP_SERIAL_TIMEOUT = 0.1
 BP_RESET_DELAY = 500
-BP_READY_SYMBOL = ">"
+BP_READY_SYMBOL = "\x03"
 BP_BASICMODE_STR = "(BASIC)"
 
 COMMENT_SYMBOL = "//"
@@ -52,13 +54,13 @@ def connect(port):
 
     log.debug('--- Serial port open')
     resp = send("")
-    if resp and BP_BASICMODE_STR in resp[-1]:
-        log.debug('--- Exiting BASIC mode')
-        send("exit")
+    #if resp and BP_BASICMODE_STR in resp[-1]:
+        #log.debug('--- Exiting BASIC mode')
+        #send("exit")
 
 def send(command):
     log.info(f">>> {command}")
-    serialCommand = command + '\n'
+    serialCommand = command + '\r\n'
     gSerial.write(serialCommand.encode())
     return waitresponse()
 
@@ -76,17 +78,18 @@ def waitresponse():
             displine = line.replace('\n','')
             log.info(f"<<< {displine}")
             # Check if command was completed (response will be something like "HiZ>")
-            if line[-1] == BP_READY_SYMBOL:
+            #if line[-1] == BP_READY_SYMBOL:
+            if BP_READY_SYMBOL in line:
                 break
     else:
         log.error('!!! Timeout waiting for response')
 
     return response
 
-def resetBoard():
-    log.debug('--- Resetting board')
-    send('#')
-    delay(BP_RESET_DELAY)
+#def resetBoard():
+#    log.debug('--- Resetting board')
+#    send('reboot')
+#    delay(BP_RESET_DELAY)
 
 def sendScript(file):
     data = open(file, encoding='utf8')
@@ -95,18 +98,18 @@ def sendScript(file):
 
     for line in lines:
         line = line.strip()
-        if line == '#':
-            resetBoard()    # Correctly handle reset timeout
+        #if line == '#':
+            #resetBoard()    # Correctly handle reset timeout
+        #else:
+        parts = line.split(COMMENT_SYMBOL)
+        command = parts.pop(0).strip()
+        comments = COMMENT_SYMBOL.join(parts)
+        if comments:
+            log.debug(f"/// {comments}")
+        if command == '':
+            delay(SCRIPT_BLANK_LINE_DELAY)
         else:
-            parts = line.split(COMMENT_SYMBOL)
-            command = parts.pop(0).strip()
-            comments = COMMENT_SYMBOL.join(parts)
-            if comments:
-                log.debug(f"/// {comments}")
-            if command == '':
-                delay(SCRIPT_BLANK_LINE_DELAY)
-            else:
-                send(command)
+            send(command)
 
 def main():
     global log
@@ -142,13 +145,13 @@ def main():
 
     connect(args.comPort)
 
-    if RESET_AT_STARTUP:
-        resetBoard()
+    #if RESET_AT_STARTUP:
+        #resetBoard()
 
     sendScript(args.scriptFileName)
 
-    if RESET_AT_END:
-        resetBoard()
+    #if RESET_AT_END:
+        #resetBoard()
 
     log.debug('--- Closing serial port')
     gSerial.close()

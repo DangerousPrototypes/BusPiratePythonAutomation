@@ -1,10 +1,11 @@
-m4      // set I2C mode
-4       // set I2C speed (400KHz)
-W       // start power supplies
+rm bpi2c.bp //remove configuration file so we don't get stuck at the previous settings prompt
+m i2c      // set I2C mode
+400       // set I2C speed (400KHz)
+1      //disable clock stretching
+W 3.3      // start power supplies
+P      //enable pull-ups
 v       // read pin states
-d       // read voltage probe
-        // delay
+> D:10        // delay
 w       // stop power supplies
 v       // read pin states
-d       // read voltage probe
-m1      // set HiZ mode
+m hiz      // set HiZ mode
