@@ -1,6 +1,7 @@
 c           // show configuration menu
 2           // ANSI color mode setting
 1           // disable ANSI color mode
+x           // exit configuration menu
 rm bpi2c.bp // remove configuration file so we don't get stuck at the previous settings prompt
 m i2c       // set I2C mode
 400         // set I2C speed (400KHz)

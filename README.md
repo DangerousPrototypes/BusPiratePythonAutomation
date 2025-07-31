@@ -15,6 +15,7 @@ This is a fork of [clvLabs Bus Pirate automation tool](https://github.com/clvLab
 c           // show configuration menu
 2           // ANSI color mode setting
 1           // disable ANSI color mode
+x           // exit configuration menu
 rm bpi2c.bp // remove configuration file 
 m i2c       // set I2C mode
 400         // set I2C speed (400KHz)
